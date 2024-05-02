@@ -1,3 +1,5 @@
+package components
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
@@ -9,6 +11,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import data.Item
+
 
 @Composable
 fun TodoItem(
@@ -23,7 +27,8 @@ fun TodoItem(
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -49,7 +54,7 @@ fun TodoItem(
                             editing = false
                         }
                     ),
-//                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.width(100.dp)
                 )
                 IconButton(
                     onClick = {
@@ -62,7 +67,6 @@ fun TodoItem(
             } else {
                 Text(
                     text = todo.task,
-//                    modifier = Modifier.weight(1f)
                     modifier = Modifier.width(100.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -80,4 +84,3 @@ fun TodoItem(
         }
     }
 }
-
