@@ -1,56 +1,83 @@
-package Service
-
-import Item
-import androidx.compose.runtime.*
-import androidx.compose.ui.*
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @Composable
-fun TodoItem(todo: Item, onToggle: (Int) -> Unit, onDelete: (Int) -> Unit, onEdit: (Int, String) -> Unit) {
+fun TodoItem(
+    todo: Item,
+    onToggle: (Int) -> Unit,
+    onDelete: (Int) -> Unit,
+    onEdit: (Int, String) -> Unit
+) {
     var editing by remember { mutableStateOf(false) }
     var editText by remember { mutableStateOf(todo.task) }
 
-    Column {
-        if (editing) {
-            TextField(
-                value = editText,
-                onValueChange = {
-                    editText = it
-                },
-                singleLine = true,
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        todo.id?.let { onEdit(it, editText) }
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = todo.completed,
+                onCheckedChange = {
+                    onToggle(todo.id ?: -1)
+                }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            if (editing) {
+                TextField(
+                    value = editText,
+                    onValueChange = {
+                        editText = it
+                    },
+                    singleLine = true,
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            onEdit(todo.id ?: -1, editText)
+                            editing = false
+                        }
+                    ),
+//                    modifier = Modifier.weight(1f)
+                )
+                IconButton(
+                    onClick = {
+                        onEdit(todo.id ?: -1, editText)
                         editing = false
                     }
+                ) {
+                    Icon(Icons.Default.Done, contentDescription = "Done")
+                }
+            } else {
+                Text(
+                    text = todo.task,
+//                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.width(100.dp)
                 )
-            )
-        } else {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(
-                    checked = todo.completed,
-                    onCheckedChange = {
-                        todo.id?.let { it1 -> onToggle(it1) }
-                    }
-                )
-                Text(todo.task)
-                Spacer(modifier = Modifier.weight(1f))
-                Button(
+                Spacer(modifier = Modifier.width(8.dp))
+                IconButton(
                     onClick = { editing = true }
                 ) {
-                    Text("Edit")
+                    Icon(Icons.Default.Edit, contentDescription = "Edit")
+                }
+                IconButton(
+                    onClick = { onDelete(todo.id ?: -1) }
+                ) {
+                    Icon(Icons.Default.Delete, contentDescription = "Delete")
                 }
             }
         }
-
-        Button(
-            onClick = { todo.id?.let { onDelete(it) } }
-        ) {
-            Text("Delete")
-        }
     }
 }
+

@@ -1,7 +1,7 @@
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.*
 import androidx.compose.material.*
 import androidx.compose.ui.unit.dp
 
@@ -9,21 +9,28 @@ import androidx.compose.ui.unit.dp
 fun AddTodo(onAdd: (String) -> Unit) {
     var newTodo by remember { mutableStateOf("") }
 
-    Column {
-        OutlinedTextField(
-            value = newTodo,
-            onValueChange = { newTodo = it },
-            label = { Text("Add Todo") },
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Button(
-            onClick = {
-                onAdd(newTodo)
-                newTodo = ""
-            }
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
         ) {
-            Text("Add")
+            OutlinedTextField(
+
+                value = newTodo,
+                onValueChange = { newTodo = it },
+                label = { Text("Add Todo") },
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Button(
+                onClick = {
+                    onAdd(newTodo)
+                    newTodo = ""
+                }
+            ) {
+                Text("Add")
+            }
         }
     }
 }
-
