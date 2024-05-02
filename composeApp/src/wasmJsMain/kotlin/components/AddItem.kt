@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun AddTodo(onAdd: (String) -> Unit) {
     var newTodo by remember { mutableStateOf("") }
+    var showError by remember { mutableStateOf(false) }
 
     Box(
         contentAlignment = Alignment.Center,
@@ -31,23 +32,42 @@ fun AddTodo(onAdd: (String) -> Unit) {
                 value = newTodo,
                 onValueChange = { newTodo = it },
                 label = { Text("Add Todo") },
+                isError = showError,
                 modifier = Modifier
                     .padding(bottom = 8.dp)
                     .onKeyEvent {
                         if (it.key == Key.Enter && it.type == KeyEventType.KeyUp) {
-                            onAdd(newTodo)
-                            newTodo = ""
-                            keyboardController?.hide()
-                            true
+                            if (newTodo.isNotBlank()) {
+                                onAdd(newTodo)
+                                newTodo = ""
+                                showError = false
+                                keyboardController?.hide()
+                                true
+                            } else {
+                                showError = true
+                                false
+                            }
                         } else {
                             false
                         }
                     }
             )
+            if (showError) {
+                Text(
+                    text = "Please enter a task",
+                    color = androidx.compose.ui.graphics.Color.Red,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
             Button(
                 onClick = {
-                    onAdd(newTodo)
-                    newTodo = ""
+                    if (newTodo.isNotBlank()) {
+                        onAdd(newTodo)
+                        newTodo = ""
+                        showError = false
+                    } else {
+                        showError = true
+                    }
                 }
             ) {
                 Text("Add")
