@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import data.Item
 
-
 @Composable
 fun TodoItem(
     todo: Item,
@@ -25,14 +24,13 @@ fun TodoItem(
     var editText by remember { mutableStateOf(todo.task) }
 
     Column(
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        modifier = Modifier.fillMaxWidth().padding(16.dp).fillMaxWidth(0.9f),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-
     ) {
         Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier =  Modifier.width(900.dp)
         ) {
             Checkbox(
                 checked = todo.completed,
@@ -42,45 +40,75 @@ fun TodoItem(
             )
             Spacer(modifier = Modifier.width(8.dp))
             if (editing) {
-                TextField(
-                    value = editText,
-                    onValueChange = {
-                        editText = it
-                    },
-                    singleLine = true,
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            onEdit(todo.id ?: -1, editText)
-                            editing = false
-                        }
-                    ),
-                    modifier = Modifier.width(100.dp)
-                )
-                IconButton(
-                    onClick = {
-                        onEdit(todo.id ?: -1, editText)
+                EditableTodo(
+                    editText = editText,
+                    onEdit = { newTask ->
+                        onEdit(todo.id ?: -1, newTask)
                         editing = false
                     }
-                ) {
-                    Icon(Icons.Default.Done, contentDescription = "Done")
-                }
-            } else {
-                Text(
-                    text = todo.task,
-                    modifier = Modifier.width(100.dp)
                 )
-                Spacer(modifier = Modifier.width(8.dp))
-                IconButton(
-                    onClick = { editing = true }
-                ) {
-                    Icon(Icons.Default.Edit, contentDescription = "Edit")
-                }
-                IconButton(
-                    onClick = { onDelete(todo.id ?: -1) }
-                ) {
-                    Icon(Icons.Default.Delete, contentDescription = "Delete")
-                }
+            } else {
+                DisplayTodo(
+                    task = todo.task,
+                    onEditClick = { editing = true },
+                    onDeleteClick = { onDelete(todo.id ?: -1) }
+                )
             }
+        }
+    }
+}
+
+@Composable
+fun EditableTodo(
+    editText: String,
+    onEdit: (String) -> Unit
+) {
+    var newTask by remember { mutableStateOf(editText) }
+
+    TextField(
+        value = newTask,
+        onValueChange = { newTask = it },
+        singleLine = true,
+        keyboardActions = KeyboardActions(
+            onDone = {
+                onEdit(newTask)
+            }
+        ),
+        modifier = Modifier
+            .fillMaxWidth(0.9f)
+            .height(56.dp)
+    )
+    IconButton(
+        onClick = { onEdit(newTask) }
+    ) {
+        Icon(Icons.Default.Done, contentDescription = "Done")
+    }
+}
+
+@Composable
+fun DisplayTodo(
+    task: String,
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = task,
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(end = 8.dp)
+        )
+        IconButton(
+            onClick = { onEditClick() }
+        ) {
+            Icon(Icons.Default.Edit, contentDescription = "Edit")
+        }
+        IconButton(
+            onClick = { onDeleteClick() }
+        ) {
+            Icon(Icons.Default.Delete, contentDescription = "Delete")
         }
     }
 }

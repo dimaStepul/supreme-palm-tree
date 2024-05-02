@@ -24,7 +24,8 @@ fun AddTodo(onAdd: (String) -> Unit) {
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val keyboardController = LocalSoftwareKeyboardController.current
 
