@@ -39,7 +39,7 @@ fun AddTodo(onAdd: (String) -> Unit) {
                     .onKeyEvent {
                         if (it.key == Key.Enter && it.type == KeyEventType.KeyUp) {
                             if (newTodo.isNotBlank()) {
-                                onAdd(newTodo)
+                                onAdd(newTodo.trimStart())
                                 newTodo = ""
                                 showError = false
                                 keyboardController?.hide()
@@ -52,6 +52,7 @@ fun AddTodo(onAdd: (String) -> Unit) {
                             false
                         }
                     }
+//                    .verticalScroll(rememberScrollState())
             )
             if (showError) {
                 Text(
@@ -63,7 +64,7 @@ fun AddTodo(onAdd: (String) -> Unit) {
             Button(
                 onClick = {
                     if (newTodo.isNotBlank()) {
-                        onAdd(newTodo)
+                        onAdd(newTodo.trimStart())
                         newTodo = ""
                         showError = false
                     } else {

@@ -18,19 +18,16 @@ fun TodoItem(
     todo: Item,
     onToggle: (Int) -> Unit,
     onDelete: (Int) -> Unit,
-    onEdit: (Int, String) -> Unit
+    onEdit: (Int, String) -> Unit,
+    editingTaskId: Int?,
+    onEditingTaskChange: (Int?) -> Unit
 ) {
-    var editing by remember { mutableStateOf(false) }
-    var editText by remember { mutableStateOf(todo.task) }
-
     Column(
-        modifier = Modifier.fillMaxWidth().padding(16.dp).fillMaxWidth(0.9f),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth().padding(16.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier =  Modifier.width(900.dp)
+            modifier = Modifier.width(900.dp)
         ) {
             Checkbox(
                 checked = todo.completed,
@@ -39,24 +36,32 @@ fun TodoItem(
                 }
             )
             Spacer(modifier = Modifier.width(8.dp))
-            if (editing) {
+            if (editingTaskId == todo.id) {
                 EditableTodo(
-                    editText = editText,
+                    editText = todo.task,
                     onEdit = { newTask ->
                         onEdit(todo.id ?: -1, newTask)
-                        editing = false
+                        onEditingTaskChange(null)
                     }
                 )
             } else {
                 DisplayTodo(
                     task = todo.task,
-                    onEditClick = { editing = true },
+                    onEditClick = {
+                        if (editingTaskId == null) {
+                            onEditingTaskChange(todo.id)
+                        } else {
+                            onEditingTaskChange(null)
+                            onEditingTaskChange(todo.id)
+                        }
+                    },
                     onDeleteClick = { onDelete(todo.id ?: -1) }
                 )
             }
         }
     }
 }
+
 
 @Composable
 fun EditableTodo(
@@ -67,19 +72,20 @@ fun EditableTodo(
 
     TextField(
         value = newTask,
-        onValueChange = { newTask = it },
+        onValueChange = { newTask = it.trimStart() },
         singleLine = true,
         keyboardActions = KeyboardActions(
             onDone = {
-                onEdit(newTask)
+                onEdit(newTask.trimStart())
             }
         ),
         modifier = Modifier
             .fillMaxWidth(0.9f)
             .height(56.dp)
+//            .verticalScroll(rememberScrollState())
     )
     IconButton(
-        onClick = { onEdit(newTask) }
+        onClick = { onEdit(newTask.trimStart()) }
     ) {
         Icon(Icons.Default.Done, contentDescription = "Done")
     }
