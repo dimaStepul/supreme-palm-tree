@@ -1,7 +1,7 @@
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +32,7 @@ fun ComposeAppTheme(
 @Composable
 fun ThemeToggleButton(onToggleTheme: () -> Unit) {
     IconButton(onClick = onToggleTheme) {
-        Icon(Icons.Default.Face, contentDescription = "Toggle Theme")
+        Icon(Icons.Default.DarkMode, contentDescription = "Toggle Theme")
     }
 }
 
@@ -58,83 +58,89 @@ fun App() {
     ComposeAppTheme(
         darkTheme = isDarkTheme
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize(),
-            content = {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxSize()
-                ) {
-                    ThemeToggleButton(onToggleTheme = toggleTheme)
+        Surface(
+            shape = MaterialTheme.shapes.medium,
+            color = MaterialTheme.colors.surface,
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize(),
+                content = {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .fillMaxSize()
+                    ) {
+                        ThemeToggleButton(onToggleTheme = toggleTheme)
 
-                    AddTodo { task ->
-                        todos = todos + Item(todos.size, task, false)
-                    }
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
+                        AddTodo { task ->
+                            todos = todos + Item(todos.size, task, false)
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Button(
+                                onClick = { showCompleted = !showCompleted }
+                            ) {
+                                Text(if (showCompleted) "Show Incomplete" else "Show Completed")
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth()
+                        ) {
+                            Surface(
+                                modifier = Modifier.padding(16.dp),
+                                shape = MaterialTheme.shapes.medium,
+                                color = MaterialTheme.colors.surface,
+                                elevation = 3.dp
+                            ) {
+                                TodoList(
+                                    todos = todos,
+                                    onToggle = { id ->
+                                        todos = todos.map {
+                                            if (it.id == id) {
+                                                it.copy(completed = !it.completed)
+                                            } else {
+                                                it
+                                            }
+                                        }
+                                    },
+                                    onDelete = { id ->
+                                        todos = todos.filter { it.id != id }
+                                    },
+                                    onEdit = { id, newTask ->
+                                        todos = todos.map {
+                                            if (it.id == id) {
+                                                it.copy(task = newTask)
+                                            } else {
+                                                it
+                                            }
+                                        }
+                                    },
+                                    showCompleted = showCompleted,
+                                    editingTaskId = editingTaskId,
+                                    onEditingTaskChange = { newId ->
+                                        editingTaskId = newId
+                                    }
+                                )
+                            }
+                        }
                         Button(
-                            onClick = { showCompleted = !showCompleted }
+                            modifier = Modifier
+                                .padding(vertical = 16.dp),
+                            onClick = { todos = emptyList() },
+                            colors = ButtonDefaults.buttonColors(Color.Red)
                         ) {
-                            Text(if (showCompleted) "Show Incomplete" else "Show Completed")
+                            Text("Clear All Tasks", color = Color.White)
                         }
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth()
-                    ) {
-                        Surface(
-                            modifier = Modifier.padding(16.dp),
-                            shape = MaterialTheme.shapes.medium,
-                            color = MaterialTheme.colors.surface
-                        ) {
-                            TodoList(
-                                todos = todos,
-                                onToggle = { id ->
-                                    todos = todos.map {
-                                        if (it.id == id) {
-                                            it.copy(completed = !it.completed)
-                                        } else {
-                                            it
-                                        }
-                                    }
-                                },
-                                onDelete = { id ->
-                                    todos = todos.filter { it.id != id }
-                                },
-                                onEdit = { id, newTask ->
-                                    todos = todos.map {
-                                        if (it.id == id) {
-                                            it.copy(task = newTask)
-                                        } else {
-                                            it
-                                        }
-                                    }
-                                },
-                                showCompleted = showCompleted,
-                                editingTaskId = editingTaskId,
-                                onEditingTaskChange = { newId ->
-                                    editingTaskId = newId
-                                }
-                            )
-                        }
-                    }
-                    Button(
-                        modifier = Modifier
-                            .padding(vertical = 16.dp),
-                        onClick = { todos = emptyList() },
-                        colors = ButtonDefaults.buttonColors(Color.Red)
-                    ) {
-                        Text("Clear All Tasks", color = Color.White)
                     }
                 }
-            }
-        )
+            )
+        }
     }
 }

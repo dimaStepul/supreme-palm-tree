@@ -47,16 +47,16 @@ fun WelcomeScreen(
                 modifier = Modifier
                     .padding(8.dp)
             ) {
-                Text("Quick notes")
+                Text("Todos")
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(
-                onClick = onLoginClicked,
-                modifier = Modifier
-                    .padding(8.dp)
-            ) {
-                Text("Login")
-            }
+//            Spacer(modifier = Modifier.height(8.dp))
+//            Button(
+//                onClick = onLoginClicked,
+//                modifier = Modifier
+//                    .padding(8.dp)
+//            ) {
+//                Text("Login")
+//            }
         }
     }
 }
