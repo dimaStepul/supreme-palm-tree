@@ -4,5 +4,5 @@ import components.ScreenHandler
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-    CanvasBasedWindow(canvasElementId = "ComposeTarget") { ScreenHandler() }
+    CanvasBasedWindow(canvasElementId = "ComposeTarget") { App() }
 }

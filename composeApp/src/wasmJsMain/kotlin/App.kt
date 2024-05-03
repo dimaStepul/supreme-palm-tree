@@ -1,3 +1,4 @@
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -6,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import components.AddTodo
 import components.TodoList
@@ -59,7 +61,7 @@ fun App() {
         darkTheme = isDarkTheme
     ) {
         Surface(
-            shape = MaterialTheme.shapes.medium,
+            shape = RectangleShape,
             color = MaterialTheme.colors.surface,
         ) {
             Box(
@@ -94,10 +96,10 @@ fun App() {
                                 .fillMaxWidth()
                         ) {
                             Surface(
-                                modifier = Modifier.padding(16.dp),
+                                modifier = Modifier.padding(16.dp).width(800.dp),
                                 shape = MaterialTheme.shapes.medium,
                                 color = MaterialTheme.colors.surface,
-                                elevation = 3.dp
+                                elevation = 3.dp,
                             ) {
                                 TodoList(
                                     todos = todos,
