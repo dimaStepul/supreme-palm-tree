@@ -1,4 +1,7 @@
-FROM ubuntu:latest
-LABEL authors="diais"
-
-ENTRYPOINT ["top", "-b"]
+FROM node:lts as nodejs
+FROM gradle:8.7-jdk17
+WORKDIR /app
+COPY --from=nodejs . .
+COPY . .
+EXPOSE 8080
+CMD ["./gradlew", ":composeApp:wasmJsRun"]
