@@ -10,8 +10,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.*
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -27,8 +28,6 @@ fun AddTodo(onAdd: (String) -> Unit) {
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val keyboardController = LocalSoftwareKeyboardController.current
-
             OutlinedTextField(
                 value = newTodo,
                 onValueChange = { newTodo = it },
@@ -37,12 +36,11 @@ fun AddTodo(onAdd: (String) -> Unit) {
                 modifier = Modifier
                     .padding(bottom = 8.dp)
                     .onKeyEvent {
-                        if (it.key == Key.Enter && it.type == KeyEventType.KeyUp) {
+                        if (it.key == Key.Enter) {
                             if (newTodo.isNotBlank()) {
                                 onAdd(newTodo.trimStart())
                                 newTodo = ""
                                 showError = false
-                                keyboardController?.hide()
                                 true
                             } else {
                                 showError = true
@@ -52,7 +50,6 @@ fun AddTodo(onAdd: (String) -> Unit) {
                             false
                         }
                     }
-//                    .verticalScroll(rememberScrollState())
             )
             if (showError) {
                 Text(

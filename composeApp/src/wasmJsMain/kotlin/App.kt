@@ -1,4 +1,3 @@
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -95,41 +94,44 @@ fun App() {
                                 .weight(1f)
                                 .fillMaxWidth()
                         ) {
-                            Surface(
-                                modifier = Modifier.padding(16.dp).width(800.dp),
-                                shape = MaterialTheme.shapes.medium,
-                                color = MaterialTheme.colors.surface,
-                                elevation = 3.dp,
-                            ) {
-                                TodoList(
-                                    todos = todos,
-                                    onToggle = { id ->
-                                        todos = todos.map {
-                                            if (it.id == id) {
-                                                it.copy(completed = !it.completed)
-                                            } else {
-                                                it
+                            if (showCompleted && todos.any { it.completed } ||
+                                !showCompleted && todos.any { !it.completed }) {
+                                Surface(
+                                    modifier = Modifier.padding(16.dp).width(800.dp),
+                                    shape = MaterialTheme.shapes.medium,
+                                    color = MaterialTheme.colors.surface,
+                                    elevation = 3.dp,
+                                ) {
+                                    TodoList(
+                                        todos = todos,
+                                        onToggle = { id ->
+                                            todos = todos.map {
+                                                if (it.id == id) {
+                                                    it.copy(completed = !it.completed)
+                                                } else {
+                                                    it
+                                                }
                                             }
-                                        }
-                                    },
-                                    onDelete = { id ->
-                                        todos = todos.filter { it.id != id }
-                                    },
-                                    onEdit = { id, newTask ->
-                                        todos = todos.map {
-                                            if (it.id == id) {
-                                                it.copy(task = newTask)
-                                            } else {
-                                                it
+                                        },
+                                        onDelete = { id ->
+                                            todos = todos.filter { it.id != id }
+                                        },
+                                        onEdit = { id, newTask ->
+                                            todos = todos.map {
+                                                if (it.id == id) {
+                                                    it.copy(task = newTask)
+                                                } else {
+                                                    it
+                                                }
                                             }
+                                        },
+                                        showCompleted = showCompleted,
+                                        editingTaskId = editingTaskId,
+                                        onEditingTaskChange = { newId ->
+                                            editingTaskId = newId
                                         }
-                                    },
-                                    showCompleted = showCompleted,
-                                    editingTaskId = editingTaskId,
-                                    onEditingTaskChange = { newId ->
-                                        editingTaskId = newId
-                                    }
-                                )
+                                    )
+                                }
                             }
                         }
                         Button(

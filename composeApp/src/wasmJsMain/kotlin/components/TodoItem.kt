@@ -10,6 +10,9 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.unit.dp
 import data.Item
 
@@ -82,7 +85,19 @@ fun EditableTodo(
         modifier = Modifier
             .fillMaxWidth(0.9f)
             .height(56.dp)
-//            .verticalScroll(rememberScrollState())
+            .onKeyEvent {
+                if (it.key == Key.Enter) {
+                    if (newTask.isNotBlank()) {
+                        onEdit(newTask.trimStart())
+                        newTask = ""
+                        true
+                    } else {
+                        false
+                    }
+                } else {
+                    false
+                }
+            }
     )
     IconButton(
         onClick = { onEdit(newTask.trimStart()) }
