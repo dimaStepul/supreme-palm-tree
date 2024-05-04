@@ -1,20 +1,20 @@
-# IntelliJ IDEA files
-.idea/
-*.iml
-*.ipr
-*.iws
-.idea_modules/
-.fleet/
-
-# Gradle files
-.gradle/
-
-# Node.js files
-node_modules/
-
-# Compiled output
-/build/
-out/
-
-# IDE metadata
-.DS_Store
+## IntelliJ IDEA files
+#.idea/
+#*.iml
+#*.ipr
+#*.iws
+#.idea_modules/
+#.fleet/
+#
+## Gradle files
+#.gradle/
+#
+## Node.js files
+#node_modules/
+#
+## Compiled output
+#/build/
+#out/
+#
+## IDE metadata
+#.DS_Store

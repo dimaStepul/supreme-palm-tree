@@ -15,7 +15,13 @@
 ### How to run 
 
 #### Docker 
-
+execute from the root folder of repo
+```bash
+docker build -t todolist  . 
+```
+```bash
+docker run -p 8080:8080 todolist
+```
 
 #### Alternative 
 You can open the web application by running the `:composeApp:wasmJsBrowserDevelopmentRun` Gradle task
