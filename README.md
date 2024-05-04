@@ -1,6 +1,8 @@
 ##  Small frontend application for managing a todo list.
 ######   Test task description: a candidate should implement a small frontend application for managing a todo list.
 
+# [Click here to tackle website](https://dimastepul.github.io/supreme-palm-tree/)
+
 ### Functionality:
 1) Creation of todo items
 2) Marking todo items as completed
