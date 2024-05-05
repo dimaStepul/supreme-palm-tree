@@ -50,6 +50,7 @@ fun AddTodo(onAdd: (String) -> Unit) {
                             false
                         }
                     }
+                , maxLines = 1
             )
             if (showError) {
                 Text(
