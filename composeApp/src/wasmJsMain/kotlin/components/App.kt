@@ -49,12 +49,11 @@ fun App() {
         )
     }
     val todos by remember { mutableStateOf(savedTodos) }
-    val showCompleted by remember { mutableStateOf(true) }
+    val showCompleted by remember { mutableStateOf(false) }
     LaunchedEffect(todos) {
         window.localStorage.setItem("todos", Json.encodeToString(todos))
     }
     val toggleTheme: () -> Unit = { isDarkTheme = !isDarkTheme }
-
     ComposeAppTheme(
         darkTheme = isDarkTheme
     ) {
@@ -80,70 +79,81 @@ fun AppContent(
     showCompleted: MutableState<Boolean>,
     editingTaskId: MutableState<Int?>
 ) {
+    DisposableEffect(todos.value) {
+        window.localStorage.setItem("todos", Json.encodeToString(todos.value))
+        onDispose { }
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.End
+    ) {
+        ThemeToggleButton(onToggleTheme = toggleTheme)
+    }
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize(),
-        content = {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxSize()
-            ) {
-                ThemeToggleButton(onToggleTheme = toggleTheme)
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxSize()
+        ) {
 
-                AddTodo { task ->
-                    todos.value = todos.value.toMutableList() + Item(todos.value.size, task, false)
-                }
-                ShowButton(
-                    showCompleted.value,
-                    onShowButtonClick = { showCompleted.value = !showCompleted.value })
-
-                Spacer(modifier = Modifier.height(8.dp))
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
-                ) {
-                    TodoListContent(showCompleted.value, todos.value, editingTaskId.value,
-                        onToggle = { id ->
-                            todos.value = todos.value.map {
-                                if (it.id == id) {
-                                    it.copy(completed = !it.completed)
-                                } else {
-                                    it
-                                }
-                            }
-                        },
-                        onDelete = { id ->
-                            todos.value = todos.value.filter { it.id != id }
-                        }, onEdit = { id, newTask ->
-                            todos.value = todos.value.map {
-                                if (it.id == id) {
-                                    it.copy(task = newTask)
-                                } else {
-                                    it
-                                }
-                            }
-                        },
-                        onEditingTaskChange = { newId ->
-                            editingTaskId.value = newId
-                        })
-
-                }
-                ClearButton(onClick = { todos.value = emptyList() })
+            AddTodo { task ->
+                todos.value = todos.value.toMutableList() + Item(todos.value.size, task, false)
             }
+            ShowButton(
+                showCompleted.value,
+                onShowButtonClick = { showCompleted.value = !showCompleted.value })
+
+            Spacer(modifier = Modifier.height(8.dp))
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            ) {
+                TodoListContent(showCompleted.value, todos.value, editingTaskId.value,
+                    onToggle = { id ->
+                        todos.value = todos.value.map {
+                            if (it.id == id) {
+                                it.copy(completed = !it.completed)
+                            } else {
+                                it
+                            }
+                        }
+                    },
+                    onDelete = { id ->
+                        todos.value = todos.value.filter { it.id != id }
+                    }, onEdit = { id, newTask ->
+                        todos.value = todos.value.map {
+                            if (it.id == id) {
+                                it.copy(task = newTask)
+                            } else {
+                                it
+                            }
+                        }
+                    },
+                    onEditingTaskChange = { newId ->
+                        editingTaskId.value = newId
+                    })
+
+            }
+            ClearButton(onClick = { todos.value = emptyList() })
         }
-    )
+    }
 }
+
 
 @Composable
 fun ShowButton(showCompleted: Boolean, onShowButtonClick: () -> Unit) {
     Button(
         onClick = onShowButtonClick
     ) {
-        Text(if (showCompleted) "Show Incomplete" else "Show Completed")
+        Text(if (!showCompleted) "Show Completed" else "Show Incomplete")
     }
 }
 

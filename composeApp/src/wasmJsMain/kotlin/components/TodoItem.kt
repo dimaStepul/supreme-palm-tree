@@ -120,6 +120,7 @@ fun DisplayTodo(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
                 .padding(end = 8.dp)
+            , maxLines = 1
         )
         IconButton(
             onClick = { onEditClick() }
